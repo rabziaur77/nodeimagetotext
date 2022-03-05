@@ -1,7 +1,11 @@
 var express = require("express");
 var route = express.Router();
 var Readtext = require("text-from-image");
-const t = require("tesseract.js")
+const t = require("tesseract.js");
+const fileTrans = require("express-fileupload");
+const app = express();
+
+app.use(fileTrans())
 
 /*
 route.get("/",function(req,res,next){
@@ -12,13 +16,9 @@ route.get("/",function(req,res,next){
     })
 });
 */
-route.get("/", function(req, res, next){
-  t.recognize("./public/images/invoice.png", "eng")
-  .then(out=>{
-    res.send(out.data.text)
-  }).catch(err=>{
-    res.send(err)
-  })
+app.post("/", function(req, res, next){
+  console.log(req)
+  res.send("file.file.name")
 })
 
 module.exports = route

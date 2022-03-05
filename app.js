@@ -7,6 +7,8 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var imageRouter = require("./routes/imageconverter")
+const t = require("tesseract.js");
+const fileTrans = require("express-fileupload");
 
 var app = express();
 
@@ -26,7 +28,32 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
+app.use(fileTrans())
+//app.use('/', indexRouter);
+app.get("/",(req, res)=>{
+  res.sendFile(__dirname + "/home.html")
+})
+
+app.post("/img", function(req, res, next){
+  if(req.files){
+    var file = req.files;
+    file.file.mv(path.join(__dirname,"upload",file.file.name), msg=>{
+      if(msg){
+        res.send("There is error.")
+      }
+      else{
+        t.recognize(path.join(__dirname,"upload",file.file.name),"eng")
+        .then(read=>{
+          res.send(read.data.text)
+        })
+        .catch(error=>{
+          res.send("error")
+        })
+      }
+    })
+  }
+})
+
 app.use('/users', usersRouter);
 app.use('/imagetotext', imageRouter);
 

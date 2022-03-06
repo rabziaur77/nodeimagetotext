@@ -12,12 +12,6 @@ const fileTrans = require("express-fileupload");
 
 var app = express();
 
-var port = process.env.PORT || 3000
-
-app.listen(port,()=>{
-  console.log("Server is listen 3000")
-})
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -72,5 +66,11 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+var port = process.env.PORT || 3000
+
+app.listen(port,()=>{
+  console.log("Server is listen 3000")
+})
 
 module.exports = app;
